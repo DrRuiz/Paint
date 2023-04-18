@@ -1,0 +1,58 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package tools;
+
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.AbstractAction;
+
+/**
+ * A clear panel action.
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/27/2022
+ */
+public class ClearPanelAction extends AbstractAction implements PropertyChangeListener {
+    
+    /**
+     * Support for firing property change events from this class.
+     */
+    private static final long serialVersionUID = 3604489099214155076L;
+    
+    /**
+     * A reference to the panel being used to draw.
+     */
+    private final ChangeablePanel myPanel;
+
+    /**
+     * A constructor that creates an action using the string passed, sets the 
+     * panel to the panel being used to draw and sets the action to false.
+     * @param thePanel the panel that is going o be cleared.
+     */
+    public ClearPanelAction(final ChangeablePanel thePanel) {
+        super("Clear");
+        myPanel = thePanel;
+        setEnabled(false);
+    }
+
+    /**
+     * Clears the panel.
+     */
+    @Override
+    public void actionPerformed(final ActionEvent theEvent) {
+        myPanel.clearPanel(); 
+    }
+    
+    /**
+     * Sets the clear action to either enabled of disabled.
+     */
+    @Override
+    public void propertyChange(final PropertyChangeEvent theEvent) {
+        if ("clear panel".equals(theEvent.getPropertyName())) {
+            setEnabled((boolean) theEvent.getOldValue());
+        }
+        
+    }
+}

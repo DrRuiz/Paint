@@ -1,0 +1,77 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package view;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JMenu;
+import javax.swing.JRadioButtonMenuItem;
+
+/**
+ * A custom menu bar.
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/28/2022
+ */
+public class SpecialMenuBar extends JMenu implements PropertyChangeListener {
+    
+    /** A serialization ID. */
+    private static final long serialVersionUID = -8691008607905623049L;
+    
+    /** A button group that will contain the menu items.*/
+    private final ButtonGroup myButtonGroup;
+    
+    /** A list containing all the radio buttons added to this menu bar. */
+    private final List<JRadioButtonMenuItem> myButtons;
+    
+    /**
+     * A constructor that creates a MenuBar using the String provided.
+     * @param theMenuName the Name of the menu bar.
+     */
+    public SpecialMenuBar(final String theMenuName) {
+        super(theMenuName);
+        myButtonGroup = new ButtonGroup();  
+        myButtons = new ArrayList<>();
+    }
+    
+    /**
+     * Creates a JRadioButtonMenuItem using the provided action, 
+     * then adds it to a button group and then adds it to this menu bar.
+     * @param theAction the action that we would like to attach to the 
+     * JRadioButtonMenuItem when creating it.
+     */
+    public void createMenuButton(final Action theAction) {
+        final JRadioButtonMenuItem createdButton = new JRadioButtonMenuItem(theAction);
+
+        myButtonGroup.add(createdButton);
+        myButtons.add(createdButton);
+        add(createdButton);
+    }
+    
+    @Override
+    public void propertyChange(final PropertyChangeEvent theEvent) {
+        if ("Line tool".equals(theEvent.getPropertyName())) {
+            myButtons.get(0).setSelected(true);
+            myButtons.get(0).setIcon((Icon) theEvent.getNewValue());
+            myButtons.get(1).setIcon(PaintGUI.MY_ICONS[1]);
+            myButtons.get(2).setIcon(PaintGUI.MY_ICONS[2]);
+        } else if ("Rectangle tool".equals(theEvent.getPropertyName())) {
+            myButtons.get(1).setSelected(true);
+            myButtons.get(1).setIcon((Icon) theEvent.getNewValue());
+            myButtons.get(0).setIcon(PaintGUI.MY_ICONS[0]);
+            myButtons.get(2).setIcon(PaintGUI.MY_ICONS[2]);
+        } else if ("Ellipse tool".equals(theEvent.getPropertyName())) {
+            myButtons.get(2).setSelected(true);
+            myButtons.get(2).setIcon((Icon) theEvent.getNewValue());
+            myButtons.get(0).setIcon(PaintGUI.MY_ICONS[0]);
+            myButtons.get(1).setIcon(PaintGUI.MY_ICONS[1]);
+        } 
+        
+    }
+}

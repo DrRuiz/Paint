@@ -1,0 +1,25 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Shape;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/22/2022
+ */
+public interface BasicTool {
+
+    Shape getShape();
+    
+    void setColor(Color theColor);
+    
+    void setThickness(int theThickness);
+    
+    void setStartPoint(Point theStartPoint);
+    
+    void setEndPoint(Point theEndPoint);
+}

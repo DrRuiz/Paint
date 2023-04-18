@@ -1,0 +1,43 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.AbstractAction;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/27/2022
+ */
+public class ClearPanelAction extends AbstractAction implements PropertyChangeListener {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3604489099214155076L;
+    
+    private ChangeablePanel myPanel;
+
+    public ClearPanelAction(final ChangeablePanel thePanel) {
+        super("Clear");
+        myPanel = thePanel;
+        setEnabled(false);
+    }
+
+    @Override
+    public void actionPerformed(final ActionEvent theEvent) {
+        myPanel.clearPanel(); 
+    }
+    
+    @Override
+    public void propertyChange(final PropertyChangeEvent theEvent) {
+        if ("clear panel".equals(theEvent.getPropertyName())) {
+            setEnabled((boolean) theEvent.getOldValue());
+        }
+        
+    }
+}

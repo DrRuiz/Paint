@@ -1,0 +1,42 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/28/2022
+ */
+public class SpecialMenuBar extends JMenu {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8691008607905623049L;
+    
+    private ButtonGroup mybtngrp;
+    
+    public SpecialMenuBar(final String theMenuName) {
+        super(theMenuName);
+        mybtngrp = new ButtonGroup();
+        
+    }
+    
+    public void createMenuButton(final Action theAction) {
+        final JRadioButtonMenuItem createdButton = new JRadioButtonMenuItem(theAction);
+
+        mybtngrp.add(createdButton);
+        add(createdButton);
+    }
+}

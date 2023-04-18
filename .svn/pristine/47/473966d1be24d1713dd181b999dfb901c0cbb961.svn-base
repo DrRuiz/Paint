@@ -1,0 +1,49 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+
+/**
+ * Creates a Rectangle
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/23/2022
+ */
+public class RectangleTool extends AbstractBasicTool {
+
+    @Override
+    public Shape getShape() {
+        return new Rectangle2D.Double(getRectangleX(), getRectangleY(),
+                getRectangleWidth(), getRectangleHeight());
+    }
+    
+    private double getRectangleWidth() {
+        return Math.abs(getStartPoint().getX() - getEndPoint().getX());
+        
+    }
+    
+    private double getRectangleHeight() {
+        return Math.abs(getStartPoint().getY() - getEndPoint().getY());
+        
+    }
+    
+    private double getRectangleX() {
+        double upperLeftX = getStartPoint().getX();
+        if (getStartPoint().getX() > getEndPoint().getX()) {
+            upperLeftX = getEndPoint().getX();
+        }
+        return upperLeftX;
+    }
+    
+    private double getRectangleY() {
+        double upperLeftY = getStartPoint().getY();
+        if (getStartPoint().getY() > getEndPoint().getY()) {
+            upperLeftY = getEndPoint().getY();
+        }
+        return upperLeftY;
+        
+    }
+
+}

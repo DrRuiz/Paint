@@ -1,0 +1,30 @@
+package view;
+
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+
+public class SpecialToolBar extends JToolBar{
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2966107841693808728L;
+    
+    private ButtonGroup mybtngrp;
+    
+    public SpecialToolBar() {
+        super();
+        mybtngrp = new ButtonGroup();
+        
+    }
+    
+    public void createToolButton(final Action theAction) {
+        final JToggleButton createdButton = new JToggleButton(theAction);
+
+        mybtngrp.add(createdButton);
+        add(createdButton);
+    }
+}

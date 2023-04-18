@@ -1,0 +1,21 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.geom.Line2D;
+
+/**
+ * @author derek
+ *
+ */
+public class LineTool extends AbstractBasicTool {
+
+    @Override
+    public Shape getShape() {
+        return new Line2D.Double(getStartPoint(), getEndPoint());
+    }
+
+}

@@ -1,0 +1,56 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Shape;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/22/2022
+ */
+public class PaintShape {
+    
+    private Shape myShape;
+    
+    private int myThickness;
+    
+    private Color myColor;
+    
+    private Point myStartPoint;
+    
+    private Point myEndPoint;
+    
+    
+    PaintShape(final Shape theShape, final Point theStartPoint, 
+            final Point theEndPoint, final int theThickness, final Color theColor) {
+        myShape = theShape;
+        myThickness = theThickness;
+        myColor = theColor;
+        
+        myStartPoint = (Point) theStartPoint.clone();
+        myEndPoint = (Point) theEndPoint.clone();
+    }
+    
+    Shape getShape() {
+        return myShape;
+    }
+    
+    int getThickness() {
+        return myThickness;
+    }
+
+    Color getColor() {
+        return myColor;
+    }
+    
+    Point getStartPoint() {
+        return (Point) myStartPoint.clone();
+    }
+    
+    Point getEndPoint() {
+        return (Point) myEndPoint.clone();
+    }
+}

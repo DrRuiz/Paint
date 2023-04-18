@@ -1,0 +1,131 @@
+/*
+ * TCSS 305 - Assignment 5
+ */
+
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+
+/**
+ * Presents the GUI for the PowerPaint application.
+ * 
+ * @author Alan Fowler (acfowler@uw.edu)
+ * @version Autumn 2022
+ */
+public final class PaintGUI {
+    
+    // constants (if any)    
+    private final static Toolkit KIT = Toolkit.getDefaultToolkit();
+    
+    private final static Dimension SCREEN_SIZE = KIT.getScreenSize();
+    
+    private final static int SCREEN_WIDTH = SCREEN_SIZE.width;
+    
+    private final static int SCREEN_HEIGHT = SCREEN_SIZE.height;
+    
+    private final static int SCALE = 3;
+    
+    // instance fields
+    private JFrame myFrame;
+
+
+    public PaintGUI() {
+        super();
+        
+        // initialize instance fields here
+        myFrame = new JFrame("TCSS 305 Paint – Autumn 2022");
+
+        
+        // setup and display the GUI
+        start();
+    }
+
+    /**
+     * Performs all tasks necessary to display the UI.
+     */
+    protected void start() {
+
+        // replace the temporary code shown below with your code
+        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Changes the icon on the top left corner.
+        final ImageIcon icon = new ImageIcon("files/w_small.png");
+        myFrame.setIconImage(icon.getImage());
+        //Sets the frame size using dimension and dividing the screen size by the scale
+        myFrame.setSize(new Dimension(SCREEN_WIDTH / SCALE, SCREEN_HEIGHT / SCALE));
+        myFrame.setLocation(SCREEN_WIDTH / 2 - myFrame.getWidth() / 2,
+                SCREEN_HEIGHT / 2 - myFrame.getHeight() / 2);
+        
+        final JMenuBar menu = new JMenuBar();
+        
+        //the option button in the menu
+        final JMenu optionsB = new JMenu("Options");
+        
+        final JMenu thicknessB = new JMenu("Thickness"); 
+        optionsB.add(thicknessB);
+        final JMenuItem colorB = new JMenuItem("Color…");
+        optionsB.add(colorB);
+        final JMenuItem clearB = new JMenuItem("Clear");
+        clearB.setEnabled(false);
+        optionsB.add(clearB);
+        menu.add(optionsB);
+        
+                    // make the inside values static final ###################################
+        final JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, 15, 3);
+        slider.setMajorTickSpacing(5);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        thicknessB.add(slider);
+        
+        //the tools button in the menu
+        final JMenu toolsB = new JMenu("Tools");
+        final ButtonGroup buttonG = new ButtonGroup();
+        
+                            //Changes the icon.
+        final ImageIcon lineIcon = new ImageIcon("files/line_bw.gif");
+        final ImageIcon rectangleIcon = new ImageIcon("files/rectangle_bw.gif");
+        final ImageIcon ellipseIcon = new ImageIcon("files/ellipse_bw.gif");
+        final ImageIcon pencilIcon = new ImageIcon("files/pencil_bw.gif");
+        
+        final JRadioButtonMenuItem lineB = new JRadioButtonMenuItem("Line");
+        lineB.setIcon(lineIcon);
+        final JRadioButtonMenuItem rectangleB = new JRadioButtonMenuItem("Rectangle");
+        rectangleB.setIcon(rectangleIcon);
+        final JRadioButtonMenuItem ellipseB = new JRadioButtonMenuItem("Ellipse");
+        ellipseB.setIcon(ellipseIcon);
+        final JRadioButtonMenuItem pencilB = new JRadioButtonMenuItem("Pencil");
+        pencilB.setIcon(pencilIcon);
+        buttonG.add(lineB);
+        buttonG.add(rectangleB);
+        buttonG.add(ellipseB);
+        buttonG.add(pencilB);
+        toolsB.add(lineB);
+        toolsB.add(rectangleB);
+        toolsB.add(ellipseB);
+        toolsB.add(pencilB);
+        menu.add(toolsB);
+        
+        //help button in the menu
+        final JMenu help = new JMenu("Help");
+        //add a listener for the pop up
+        menu.add(help);
+        
+        myFrame.add(menu, BorderLayout.NORTH);
+        
+        myFrame.setVisible(true);
+        
+    }
+
+}

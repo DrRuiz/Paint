@@ -1,0 +1,44 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package tools;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
+/**
+ * A changeable panel.
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/27/2022
+ */
+public class ChangeablePanel {
+    
+    /**
+     * Support for firing property change events from this class.
+     */
+    private final PropertyChangeSupport myPCS = new PropertyChangeSupport(this);
+    
+    /**
+     *  Will fire a property change asking to clear the panel.
+     */
+    public void clearPanel() {
+        myPCS.firePropertyChange("clear panel", false, true);
+    }
+
+    /**
+     * Adds listeners to listen to the property change events from this class.
+     * @param theListener a PropertyChangeListener to add.
+     */
+    public void addPropertyChangeListener(final PropertyChangeListener theListener) {
+        myPCS.addPropertyChangeListener(theListener);
+    }
+    
+    /**
+     * Removes a listener for property change events from this class.
+     * @param theListener a PropertyChangeListener to remove.
+     */
+    public void removePropertyChangeListener(final PropertyChangeListener theListener) {
+        myPCS.removePropertyChangeListener(theListener);
+    }
+}

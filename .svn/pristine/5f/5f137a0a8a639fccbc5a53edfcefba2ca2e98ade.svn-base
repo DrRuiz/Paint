@@ -1,0 +1,95 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
+
+import view.LinePanel.MouseLineListener;
+
+/**
+ * @author derek
+ *
+ */
+public class DoodlePanel extends JPanel {
+    
+    private Point myStartPoint;
+    
+    private Point myEndPoint;
+
+//    private int myInitX;
+//    
+//    private int myInitY;
+//    
+//    private int myEndX;
+//    
+//    private int myEndY;
+    
+//    public DoodlePanel() {
+//        super();
+//        myOldShapes = ArrayList<>();
+//        setBackground(Color.WHITE);
+//    }
+    
+//    private boolean hasStarted;
+    private static final Color UW_PURPLE = new Color(51, 0, 111);
+      
+    public DoodlePanel(){
+        super();
+        myStartPoint = new Point(-15, -15);
+        myEndPoint = new Point(-15, -15);
+        setUp();
+    }
+    
+    public void setUp() {
+        MouseLineListener ml = new MouseLineListener();
+        addMouseListener(ml);
+        addMouseMotionListener(ml);
+    } 
+    
+    //i think i got it
+    @Override
+    public void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        final Graphics2D g2d = (Graphics2D)theGraphics;
+        setBackground(Color.WHITE);
+        //put this in a iterator.
+        g2d.setPaint(UW_PURPLE);
+        g2d.setStroke(new BasicStroke(3));
+        final Shape line = new Line2D.Double(myStartPoint,myEndPoint);
+        g2d.draw(line);
+    }
+    
+    public class MouseLineListener extends MouseInputAdapter {
+
+        //starting point
+        @Override
+        public void mousePressed(final MouseEvent theEvent) {
+            myStartPoint = theEvent.getPoint();
+        }
+
+        //we stop pressing
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {            
+        }
+
+        @Override
+        public void mouseDragged(final MouseEvent theEvent) {
+            myEndPoint = theEvent.getPoint();
+            repaint();
+        }
+    }
+
+}

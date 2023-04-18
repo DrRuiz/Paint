@@ -1,0 +1,176 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
+
+import tools.AbstractBasicTool;
+import tools.BasicTool;
+import tools.LineTool;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/23/2022
+ */
+public class DoodlePanel extends JPanel implements PropertyChangeListener{
+    
+    private static final Point NO_POINT = new Point(-15, -15);
+    
+    private static final long serialVersionUID = 1282742682051621286L;
+
+    public static final Color UW_PURPLE = new Color(51, 0, 111);
+    
+    public static final int DEFAULT_THICKNESS = 3;  
+    
+    /**
+     * Support for firing property change events from this class.
+     */
+    private final PropertyChangeSupport myPCS = new PropertyChangeSupport(this);
+
+    private BasicTool myCurrentTool;
+    
+    private ArrayList<PaintShape> myOldShapes;
+    
+    private Color myCurrentColor; 
+    
+    private int myCurrentThickness;
+    
+    private boolean myDrawingPermit;
+      
+    public DoodlePanel() {
+        super();
+        myOldShapes = new ArrayList<>();
+        setUp();
+    }
+    
+    public void setUp() {
+        myCurrentTool = new LineTool();
+        final MouseLineListener ml = new MouseLineListener();
+        addMouseListener(ml);
+        addMouseMotionListener(ml);
+        setBackground(Color.WHITE);
+        myCurrentColor = UW_PURPLE;
+        myCurrentThickness = DEFAULT_THICKNESS;
+        myDrawingPermit = true;
+    } 
+    
+    @Override
+    public void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        final Graphics2D g2d = (Graphics2D) theGraphics;
+        //put this in a iterator.
+        for (final PaintShape s: myOldShapes) {
+            g2d.setPaint(s.getColor());
+            g2d.setStroke(new BasicStroke(s.getThickness()));
+            g2d.draw(s.getShape());
+        }
+
+        g2d.setPaint(myCurrentColor);
+        g2d.setStroke(new BasicStroke(myCurrentTool.getThickness()));
+        g2d.draw(myCurrentTool.getShape()); 
+        
+    }
+    
+    public void setTool(final BasicTool theTool) {
+        myCurrentTool = theTool;
+    }
+    
+    public void setCurrentThickness(final int theThickness) {
+        myCurrentThickness = theThickness;
+    }
+    
+    public void setDrawingPermit(final boolean theDrawingPermit) {
+        myDrawingPermit = theDrawingPermit;
+    }
+    
+    public boolean hasShapes() {
+        return myOldShapes.size() > 0;
+    }
+    
+    public void setCurrentColor(final Color theColor) {
+        myCurrentColor = theColor;
+    }
+    
+    public Color getCurrentColor() {
+        return myCurrentColor;
+    }
+    
+    @Override
+    public void propertyChange(final PropertyChangeEvent theEvent) {
+        if ("clear panel".equals(theEvent.getPropertyName())) {
+            myOldShapes.clear();
+            
+            myCurrentTool.setStartPoint(NO_POINT);
+            myCurrentTool.setEndPoint(NO_POINT);
+            repaint();
+        }
+    }
+    
+    // methods required for PropertyChange support
+
+    /**
+     * Adds a listener for property change events from this class.
+     * 
+     * @param theListener a PropertyChangeListener to add.
+     */
+    public void addPropertyChangeListener(final PropertyChangeListener theListener) {
+        myPCS.addPropertyChangeListener(theListener);
+    }
+    
+    /**
+     * Removes a listener for property change events from this class.
+     * 
+     * @param theListener a PropertyChangeListener to remove.
+     */
+    public void removePropertyChangeListener(final PropertyChangeListener theListener) {
+        myPCS.removePropertyChangeListener(theListener);
+    }
+    
+    public class MouseLineListener extends MouseInputAdapter {
+
+        //starting point
+        @Override
+        public void mousePressed(final MouseEvent theEvent) {
+            if (myDrawingPermit) {
+                myCurrentTool.setStartPoint(theEvent.getPoint());
+                myCurrentTool.setEndPoint(theEvent.getPoint());
+                myCurrentTool.setColor(myCurrentColor);
+                myCurrentTool.setThickness(myCurrentThickness);
+                repaint();
+            }
+            
+        }
+
+        @Override
+        public void mouseDragged(final MouseEvent theEvent) {
+            if (myDrawingPermit) {
+                myCurrentTool.setEndPoint(theEvent.getPoint());
+                repaint();
+            }
+        }
+        
+        //we stop pressing
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {   
+            if (myDrawingPermit) {
+                myOldShapes.add(new PaintShape(myCurrentTool.getShape(),
+                    myCurrentTool.getThickness(), myCurrentTool.getColor()));
+                //since we have drawn someting the clear button should activate.
+                myPCS.firePropertyChange("contains shapes", false, hasShapes());
+            }
+        }
+    }
+}

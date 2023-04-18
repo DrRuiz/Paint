@@ -1,0 +1,114 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/19/2022
+ */
+public class LinePanel extends JPanel {
+
+    private int myInitX;
+    
+    private int myInitY;
+    
+    private int myEndX;
+    
+    private int myEndY;
+    
+    private boolean hasStarted;
+    
+    private static final Color UW_PURPLE = new Color(51, 0, 111);
+      
+    public LinePanel(){
+        myInitX = 0;
+        myInitY = 0;
+        myEndX = 0;
+        myEndY = 0;
+        hasStarted = false;
+        setUp();
+    }
+    
+    public void setUp() {
+        MouseLineListener ml = new MouseLineListener();
+        addMouseListener(ml);
+        addMouseMotionListener(ml);
+    } 
+    
+    @Override
+    public void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        final Graphics2D g2d = (Graphics2D)theGraphics;
+        setBackground(Color.WHITE);
+        g2d.setPaint(UW_PURPLE);
+        g2d.setStroke(new BasicStroke(3));
+        if (hasStarted) {
+            g2d.drawLine(myInitX, myInitY, myEndX, myEndY);
+        }
+    }
+    
+    public class MouseLineListener implements MouseInputListener {
+
+        @Override
+        public void mouseClicked(final MouseEvent theEvent) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void mousePressed(final MouseEvent theEvent) {
+//            System.out.println("Starting Point");
+            myInitX = theEvent.getX();
+            myInitY = theEvent.getY();
+//            System.out.println(myInitX + ", " + myInitY);
+            hasStarted = true;
+            
+        }
+
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {
+//            System.out.println("End Point");
+            myEndX = theEvent.getX();
+            myEndY = theEvent.getY();
+//            System.out.println(myEndX + ", " + myEndY);
+            
+        }
+
+        @Override
+        public void mouseEntered(final MouseEvent theEvent) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void mouseExited(final MouseEvent theEvent) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void mouseDragged(final MouseEvent theEvent) {
+//            System.out.println("UPDATE");
+            myEndX = theEvent.getX();
+            myEndY = theEvent.getY();
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(final MouseEvent theEvent) {
+            // TODO Auto-generated method stub
+            
+        }
+
+    }
+}

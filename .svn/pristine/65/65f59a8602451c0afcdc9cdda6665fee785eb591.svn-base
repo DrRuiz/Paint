@@ -1,0 +1,67 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package view;
+
+import java.awt.Color;
+import java.awt.Shape;
+
+/**
+ * A class that stores drawn shapes .
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/22/2022
+ */
+public class PaintShape {
+    
+    /**
+     * The Shape that needs to be stored.
+     */
+    private final Shape myShape;
+    
+    /**
+     * The thickness of the shape stored.
+     */
+    private final int myThickness;
+    
+    /**
+     * The color of the shape stored.
+     */
+    private final Color myColor;
+    
+    /**
+     * A constructor that stores the shape,the thickness and the color of a shape. 
+     * @param theShape the shape that needs to be stored.
+     * @param theThickness the thickness that needs to be stored.
+     * @param theColor the color that needs to be stored.
+     */
+    public PaintShape(final Shape theShape, final int theThickness, final Color theColor) {
+        myShape = theShape;
+        myThickness = theThickness;
+        myColor = theColor;
+    }
+    
+    /**
+     * Returns the stored shape.
+     * @return Shape the shape that was previously stored.
+     */
+    public Shape getShape() {
+        return myShape;
+    }
+    
+    /**
+     * Returns the thickness of the shape stored.
+     * @return int the thickness of the shape that was previously stored.
+     */
+    public int getThickness() {
+        return myThickness;
+    }
+
+    /**
+     * Returns the Color of the shape stored.
+     * @return Color the color that was previously stored.
+     */
+    public Color getColor() {
+        return myColor;
+    }
+}

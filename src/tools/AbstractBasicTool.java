@@ -1,0 +1,118 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package tools;
+
+import java.awt.Color;
+import java.awt.Point;
+import view.DoodlePanel;
+
+/**
+ * An Abstract Basic tool.
+ * @author Derek Jagger Ruiz Garcia
+ * @version 12/8/2022
+ */
+public abstract class AbstractBasicTool implements BasicTool {
+    
+    /** A point outside of the panel. */
+    private static final Point NEGATIVE_POINT = new Point(-15, -15);
+    
+    /** The color that the tools is going to use to draw the outline of the shape. */
+    private Color myColor;
+    
+    /** The color that the tool is going to use to fill the inside of the shape. */
+    private Color myInnerColor;
+    
+    /** The thickness the tools is going to use to draw. */
+    private int myThickness;
+    
+    /** The point where the tool is going to start drawing.*/
+    private Point myStartPoint;
+    
+    /** The point where the tools is going to finish drawing.*/
+    private Point myEndPoint;
+    
+    /** The boolean value of whether or not the tool needs to fill the shape. */
+    private boolean myShapeIsFilled; 
+    
+    /**The constructor that will initialize the color to UW_PURPLE,
+     * the thickness to 3, the inside filled to false and the start 
+     * point and the end point outside of the panel.
+     */
+    protected AbstractBasicTool() {
+        myColor = DoodlePanel.UW_PURPLE;
+        myInnerColor = DoodlePanel.UW_GOLD;
+        myThickness = DoodlePanel.DEFAULT_THICKNESS;
+        myStartPoint = NEGATIVE_POINT;
+        myEndPoint = NEGATIVE_POINT;
+        myShapeIsFilled = false;
+    }
+    
+    @Override
+    public void setColor(final Color theColor) {
+        myColor = theColor;
+    }
+    
+    @Override
+    public Color getColor() {
+        return myColor;
+    }
+    
+    @Override
+    public void setInnerColor(final Color theInnerColor) {
+        myInnerColor = theInnerColor;
+    }
+    
+    @Override
+    public Color getInnerColor() {
+        return myInnerColor;
+    }
+    
+    @Override
+    public void setThickness(final int theThickness) {
+        myThickness = theThickness;
+    }
+    
+    @Override
+    public int getThickness() {
+        return myThickness;
+    }
+    
+    @Override
+    public void setStartPoint(final Point theStartPoint) {
+        myStartPoint = (Point) theStartPoint.clone();
+    }
+    
+    @Override
+    public Point getStartPoint() {
+        return (Point) myStartPoint.clone();
+    }
+    
+    @Override
+    public void setEndPoint(final Point theEndPoint) {
+        myEndPoint = (Point) theEndPoint.clone();
+
+    }
+    
+    @Override
+    public Point getEndPoint() {
+        return (Point) myEndPoint.clone();
+
+    }
+    
+    @Override
+    public void fillShape(final boolean theShapeIsFilled) {
+        myShapeIsFilled = theShapeIsFilled;
+    }
+    
+    @Override
+    public boolean isShapeFilled() {
+        return myShapeIsFilled;
+    }
+    
+    @Override
+    public final String toString() {
+        return getClass().getSimpleName();
+    }
+}

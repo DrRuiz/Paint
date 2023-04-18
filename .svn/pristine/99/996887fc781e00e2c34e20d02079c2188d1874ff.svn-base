@@ -1,0 +1,103 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
+import tools.BasicTool;
+import tools.LineTool;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/23/2022
+ */
+public class DoodlePanel extends JPanel {
+    
+    private static final long serialVersionUID = 1282742682051621286L;
+
+    public static final Color UW_PURPLE = new Color(51, 0, 111);
+
+    private BasicTool myCurrentTool;
+    
+    private ArrayList<PaintShape> myOldShapes;
+    
+    private Color myCurrentColor; 
+      
+    public DoodlePanel() {
+        super();
+        myOldShapes = new ArrayList<>();
+//      setBackground(Color.WHITE);
+        setUp();
+    }
+    
+    public void setUp() {
+        myCurrentTool = new LineTool();
+        final MouseLineListener ml = new MouseLineListener();
+        addMouseListener(ml);
+        addMouseMotionListener(ml);
+        setBackground(Color.WHITE);
+        myCurrentColor = UW_PURPLE;
+    } 
+    
+    @Override
+    public void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        final Graphics2D g2d = (Graphics2D) theGraphics;
+        //put this in a iterator.
+        for (final PaintShape s: myOldShapes) {
+            g2d.setPaint(s.getColor());
+            g2d.setStroke(new BasicStroke(s.getThickness()));
+            g2d.draw(s.getShape());
+        }
+        g2d.setPaint(myCurrentColor);
+        g2d.setStroke(new BasicStroke(myCurrentTool.getThickness()));
+        g2d.draw(myCurrentTool.getShape());
+    }
+    
+    public void setTool(final BasicTool theTool) {
+        myCurrentTool = theTool;
+    }
+    
+    public void setCurrentColor(final Color theColor) {
+        myCurrentColor = theColor;
+    }
+    
+    public Color getCurrentColor() {
+        return myCurrentColor;
+    }
+    
+    public class MouseLineListener extends MouseInputAdapter {
+
+        //starting point
+        @Override
+        public void mousePressed(final MouseEvent theEvent) {
+            myCurrentTool.setStartPoint(theEvent.getPoint());
+            myCurrentTool.setEndPoint(theEvent.getPoint());
+            myCurrentTool.setColor(myCurrentColor);
+            myCurrentTool.setThickness(5);
+            repaint();
+        }
+
+        @Override
+        public void mouseDragged(final MouseEvent theEvent) {
+            myCurrentTool.setEndPoint(theEvent.getPoint());
+            repaint();
+        }
+        
+        //we stop pressing
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {   
+            myOldShapes.add(new PaintShape(myCurrentTool.getShape(),
+                    myCurrentTool.getThickness(), myCurrentTool.getColor()));
+        }
+    }
+
+}

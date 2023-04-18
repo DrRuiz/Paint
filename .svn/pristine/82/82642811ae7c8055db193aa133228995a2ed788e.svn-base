@@ -1,0 +1,48 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+
+/**
+ * Creates an ellipse
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/26/2022
+ */
+public class EllipseTool extends AbstractBasicTool {
+
+    @Override
+    public Shape getShape() {
+        return new Ellipse2D.Double(getEllipseX(), getEllipseY(),
+                getEllipseWidth(), getEllipseHeight());
+    }
+
+    private double getEllipseWidth() {
+        return Math.abs(getStartPoint().getX() - getEndPoint().getX());
+        
+    }
+    
+    private double getEllipseHeight() {
+        return Math.abs(getStartPoint().getY() - getEndPoint().getY());
+        
+    }
+    
+    private double getEllipseX() {
+        double upperLeftX = getStartPoint().getX();
+        if (getStartPoint().getX() > getEndPoint().getX()) {
+            upperLeftX = getEndPoint().getX();
+        }
+        return upperLeftX;
+    }
+    
+    private double getEllipseY() {
+        double upperLeftY = getStartPoint().getY();
+        if (getStartPoint().getY() > getEndPoint().getY()) {
+            upperLeftY = getEndPoint().getY();
+        }
+        return upperLeftY;
+        
+    }
+}

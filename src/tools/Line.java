@@ -1,0 +1,21 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package tools;
+
+import java.awt.Shape;
+import java.awt.geom.Line2D;
+
+/**
+ * Creates a line.
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/23/2022
+ */
+public class Line extends AbstractBasicTool {
+
+    @Override
+    public Shape getShape() {
+        return new Line2D.Double(getStartPoint(), getEndPoint());
+    }
+}

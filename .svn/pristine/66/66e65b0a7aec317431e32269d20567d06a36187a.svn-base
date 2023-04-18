@@ -1,0 +1,60 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.Color;
+import java.awt.Point;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/23/2022
+ */
+public abstract class AbstractBasicTool implements BasicTool {
+    
+    private Color myColor;
+    
+    private int myThickness;
+    
+    private Point myStartPoint;
+    
+    private Point myEndPoint;
+
+    @Override
+    public void setColor(final Color theColor) {
+        myColor = theColor;
+    }
+    
+    protected Color getColor() {
+        return myColor;
+    }
+    
+    @Override
+    public void setThickness(final int theThickness) {
+        myThickness = theThickness;
+    }
+    
+    protected int getThickness() {
+        return myThickness;
+    }
+    
+    @Override
+    public void setStartPoint(final Point theStartPoint) {
+        myStartPoint = (Point) theStartPoint.clone();
+    }
+    
+    protected Point getStartPoint() {
+        return (Point) myStartPoint.clone();
+    }
+    
+    @Override
+    public void setEndPoint(Point theEndPoint) {
+        myEndPoint = (Point) theEndPoint.clone();
+
+    }
+    
+    public Point getEndPoint() {
+        return (Point) myEndPoint.clone();
+
+    }
+}

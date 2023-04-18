@@ -1,0 +1,42 @@
+/*
+ * TCSS 305 Autumn 2022
+ * Assignment 5
+ */
+package view;
+
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+
+public class SpecialToolBar extends JToolBar {
+
+    /** A serialization ID. */
+    private static final long serialVersionUID = -2966107841693808728L;
+    
+    /**
+     * A button group that will contain the menu items.
+     */
+    private final ButtonGroup myButtonGroup;
+    
+    /**
+     * A constructor that creates a ToolBar and a button group.
+     */
+    public SpecialToolBar() {
+        super();
+        myButtonGroup = new ButtonGroup();
+    }
+    
+    /**
+     * Creates a JToggleButton using the provided action, 
+     * then adds it to a button group and then adds it to this tool bar.
+     * @param theAction the action that we would like to attach to the 
+     * JToggleButton when creating it.
+     */
+    public void createToolButton(final Action theAction) {
+        final JToggleButton createdButton = new JToggleButton(theAction);
+
+        myButtonGroup.add(createdButton);
+        add(createdButton);
+    }
+}

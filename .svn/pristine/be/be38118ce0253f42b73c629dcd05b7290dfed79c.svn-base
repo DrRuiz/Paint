@@ -1,0 +1,447 @@
+/*
+ * TCSS 305 - Assignment 5
+ */
+
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
+import tools.BasicTool;
+import tools.ChangeablePanel;
+import tools.ClearPanelAction;
+import tools.Ellipse;
+import tools.Line;
+import tools.Rectangle;
+
+/**
+ * Presents the GUI for the PowerPaint application.
+ * 
+ * @author Alan Fowler (acfowler@uw.edu)
+ * @author Derek Jagger Ruiz Garcia 
+ * @version Autumn 2022
+ */
+public final class PaintGUI implements PropertyChangeListener {
+    
+    // constants (if any)    
+    /**
+     * The toolkit used to get the size of the screen.
+     */
+    private static final Toolkit KIT = Toolkit.getDefaultToolkit();
+    
+    /**
+     * The dimension of the user's screen.
+     */
+    private static final Dimension SCREEN_SIZE = KIT.getScreenSize();
+    
+    /**
+     * The width of the user's screen.
+     */
+    private static final int SCREEN_WIDTH = SCREEN_SIZE.width;
+    
+    /**
+     * The height of the user's screen.
+     */
+    private static final int SCREEN_HEIGHT = SCREEN_SIZE.height;
+    
+    /**
+     * The scale that determines the size of the frame.
+     */
+    private static final int SCALE = 3;
+    
+    /**
+     * The major tick that the slider will be divided in.
+     */
+    private static final int MAJOR_TICK = 5;
+    
+    /**
+     * The minor tick that the slider will be divided in.
+     */
+    private static final int MINOR_TICK = 1;
+    
+    /**
+     * The initial thickness of the slider.
+     */
+    private static final int INITIAL_THICKNESS = 3;
+    
+    /**
+     * The maximum thickness allowed by the thickness slider.
+     */
+    private static final int MAX_THICKNESS = 15;
+    
+    /**
+     * The minimum thickness allowed by the thickness slider.
+     */
+    private static final int MIN_THICKNESS = 0;
+    
+    // instance fields
+    /**
+     * The Frame used to display the program.
+     */
+    private final JFrame myFrame;
+    
+    /**
+     * The panel used to draw shapes.
+     */
+    private final DoodlePanel myDoodlePanel;
+    
+    /**
+     * The menu that stores the options, tools and help buttons.
+     */
+    private final JMenuBar myMenu;
+    
+    /**
+     * A basic tool that helps create lines.
+     */
+    private final BasicTool myLineTool;
+    
+    /**
+     * A basic tool that helps create rectangles.
+     */
+    private final BasicTool myRectangleTool;
+
+    /**
+     * A basic tool that helps create ellipses.
+     */
+    private final BasicTool myEllipseTool;
+    
+    private final JCheckBoxMenuItem fillB;
+    
+    //might remove it.
+    /**
+     * A changeable panel that sends a signal 
+     * to the panel when the buttons clear is hit.
+     */
+    private final ChangeablePanel myShapesPanel;
+    
+    /**
+     * An action that is attached to the clear button.
+     */
+    private final ClearPanelAction myClearPanelAction;
+    
+    /**
+     * A GUI constructor that initializes all the instance fields.
+     */
+    public PaintGUI() {
+        super();
+        
+        myFrame = new JFrame("TCSS 305 Paint – Autumn 2022");
+        myDoodlePanel = new DoodlePanel();
+        myMenu = new JMenuBar();
+        myLineTool = new Line();
+        myRectangleTool = new Rectangle();
+        myEllipseTool = new Ellipse();
+        fillB = new JCheckBoxMenuItem("Fill");
+        myShapesPanel = new ChangeablePanel();
+        myClearPanelAction = new ClearPanelAction(myShapesPanel);
+        
+        // setup and display the GUI
+        start();
+    }
+
+    /**
+     * Performs all tasks necessary to display the UI.
+     */
+    public void start() {
+        
+        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        final ImageIcon wIcon = new ImageIcon("files/w_small.png");
+        final ImageIcon lineIcon = new ImageIcon("files/line_bw.gif");
+        final ImageIcon rectangleIcon = new ImageIcon("files/rectangle_bw.gif");
+        final ImageIcon ellipseIcon = new ImageIcon("files/ellipse_bw.gif");
+        
+        myFrame.setIconImage(wIcon.getImage());
+        myFrame.setSize(new Dimension(SCREEN_WIDTH / SCALE, SCREEN_HEIGHT / SCALE));
+        myFrame.setLocation(SCREEN_WIDTH / 2 - myFrame.getWidth() / 2,
+                SCREEN_HEIGHT / 2 - myFrame.getHeight() / 2);
+        //for the cross bar
+        myDoodlePanel.addMouseListener(new MouseEntranceListener());
+        
+        myDoodlePanel.addPropertyChangeListener(this);
+
+        myFrame.add(myDoodlePanel);
+        
+        final JMenu optionsMenu = new JMenu("Options");
+
+        final JMenu thicknessB = new JMenu("Thickness"); 
+        thicknessB.add(createSlider());
+        optionsMenu.add(thicknessB);
+        optionsMenu.addSeparator();
+        final JMenuItem colorB = new JMenuItem("Color…");
+        colorB.addActionListener(new OutlineColorListener());
+        optionsMenu.add(colorB);
+        
+        //fillColor
+        final JMenuItem fillColorB = new JMenuItem("Fill Color…");
+        fillColorB.addActionListener(new InnerColorListener());
+        optionsMenu.add(fillColorB);
+        optionsMenu.addSeparator();
+        
+        //fill
+//        final JCheckBoxMenuItem fillB = new JCheckBoxMenuItem("Fill");
+        //need to change
+        fillB.setEnabled(false);
+        fillB.addActionListener(new FillListener());
+        optionsMenu.add(fillB);
+        optionsMenu.addSeparator();
+        
+        myShapesPanel.addPropertyChangeListener(myDoodlePanel);
+        myShapesPanel.addPropertyChangeListener(myClearPanelAction);       
+        final JMenuItem clearB = new JMenuItem(myClearPanelAction);
+        optionsMenu.add(clearB);
+        
+        myMenu.add(optionsMenu);
+        
+        //creates an array of actions with the icons
+        final Action[] toolActions = {new LineAction(lineIcon), 
+            new RectangleAction(rectangleIcon), new EllipseAction(ellipseIcon)};
+        
+        //creates a custom JMenu and JToolBar
+        final SpecialMenuBar toolsMenu = new SpecialMenuBar("Tools");
+        final SpecialToolBar toolBar = new SpecialToolBar();
+        //Adds actions to buttons and then adds them to the tool menu and tool bar.
+        for (final Action currentA : toolActions) {
+            toolsMenu.createMenuButton(currentA);
+            toolBar.createToolButton(currentA);
+        }
+        myMenu.add(toolsMenu);
+        
+        final JMenu helpMenu = createHelpMenu(wIcon);
+        myMenu.add(helpMenu);
+        
+        myFrame.add(toolBar, BorderLayout.SOUTH);
+        myFrame.setJMenuBar(myMenu);
+        myFrame.setVisible(true);
+        
+    }
+    
+    /**
+     * Creates a slider adds a listener to it and then returns it.
+     * @return JSlider a slider containing an initial thickness, 
+     * a maximum thickness and minimum thickness with a listener attached to it.
+     */
+    private JSlider createSlider() {
+        final JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 
+                MIN_THICKNESS, MAX_THICKNESS, INITIAL_THICKNESS);
+        slider.setMajorTickSpacing(MAJOR_TICK);
+        slider.setMinorTickSpacing(MINOR_TICK);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        
+        /**
+         * A change listener that will listen to the thickness slider.
+         * @author Derek Jagger Ruiz Garcia
+         * @version 11/29/2022
+         */
+        class SlideListener implements ChangeListener {
+            @Override
+            public void stateChanged(final ChangeEvent theEvent) {
+                final int chosenThickness = slider.getValue();
+                myDoodlePanel.canDraw(chosenThickness > 0);
+                if (chosenThickness > 0) {
+                    myDoodlePanel.setCurrentThickness(chosenThickness);
+                } 
+            }
+        }
+        
+        slider.addChangeListener(new SlideListener());
+        return slider;
+    }
+    
+    /**
+     * Creates a menu using the icon provided and the word Help,
+     * to then add a menu item with a listener to the menu, to then return it.
+     * @param theIcon the icon that the JOptionPane is going to 
+     * display in the message dialog.
+     * @return JMenu a JMenu with the Help title and with the provided
+     * icon containing an about button with a listener that displays a 
+     * JOptionPane when pressed.
+     */
+    private JMenu createHelpMenu(final ImageIcon theIcon) {
+        //creates a help menu
+        final JMenu helpMenu = new JMenu("Help");
+        final JMenuItem aboutButton = new JMenuItem("About...");
+        aboutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent theEvent) {
+                JOptionPane.showMessageDialog(myFrame, 
+                        "Derek J. Ruiz Garcia \n Autumn 2022", 
+                        "TCSS 305 Paint", JOptionPane.INFORMATION_MESSAGE, theIcon);
+            }
+        });
+        helpMenu.add(aboutButton);
+        return helpMenu;
+    }
+    
+    @Override
+    public void propertyChange(final PropertyChangeEvent theEvent) {
+        myClearPanelAction.setEnabled("contains shapes".equals(theEvent.getPropertyName()));
+    }
+    
+    /**
+     * An abstract action for the line.
+     * @author Derek Jagger Ruiz Garcia
+     * @version 11/29/2022
+     */
+    public class LineAction extends AbstractAction {
+
+        /** A generated serialization ID. */
+        private static final long serialVersionUID = 1556815184721042561L;
+
+        /**
+         * Will create an abstract action using the title "Line" and the icon provided,
+         * and will synchronize the items to witch this Abstract actions is attached to.
+         * @param theIcon the icon that the buttons are going to display. 
+         */
+        public LineAction(final ImageIcon theIcon) {
+            super("Line", theIcon);
+            putValue(Action.SELECTED_KEY, true);
+        }
+        
+        @Override
+        public void actionPerformed(final ActionEvent theEvent) {
+            myDoodlePanel.setTool(myLineTool);
+            if (fillB.isEnabled()) {
+                fillB.setSelected(false);
+                fillB.setEnabled(false);
+            }
+        }
+        
+    }
+    
+    /**
+     * An abstract action for the rectangle.
+     * @author Derek Jagger Ruiz Garcia
+     * @version 11/29/2022
+     */
+    public class RectangleAction extends AbstractAction {
+
+        /** A generated serialization ID. */
+        private static final long serialVersionUID = -7871030088279364388L;
+
+        /**
+         * Will create an abstract action using the title "Rectangle" and the icon provided,
+         * and will synchronize the items to witch this Abstract actions is attached to.
+         * @param theIcon the icon that the buttons are going to display. 
+         */
+        public RectangleAction(final ImageIcon theIcon) {
+            super("Rectangle", theIcon);
+            putValue(Action.SELECTED_KEY, true);
+        }
+        
+        @Override
+        public void actionPerformed(final ActionEvent theEvent) {
+            myDoodlePanel.setTool(myRectangleTool);
+            if (!fillB.isEnabled()) {
+                fillB.setEnabled(true);
+            }
+        }
+        
+    }
+    
+    /**
+     * An abstract action for the ellipse.
+     * @author Derek Jagger Ruiz Garcia
+     * @version 11/29/2022
+     */
+    public class EllipseAction extends AbstractAction {
+
+        /** A generated serialization ID. */
+        private static final long serialVersionUID = 3437026304574047648L;
+
+        /**
+         * Will create an abstract action using the title "Ellipse" and the icon provided,
+         * and will synchronize the items to witch this Abstract actions is attached to.
+         * @param theIcon the icon that the buttons are going to display. 
+         */
+        public EllipseAction(final ImageIcon theIcon) {
+            super("Ellipse", theIcon);
+            putValue(Action.SELECTED_KEY, true);
+        }
+        
+        @Override
+        public void actionPerformed(final ActionEvent theEvent) {
+            myDoodlePanel.setTool(myEllipseTool);
+            if (!fillB.isEnabled()) {
+                fillB.setEnabled(true);
+            }
+        }
+    }
+    
+    public class FillListener implements ActionListener {
+        
+        @Override
+        public void actionPerformed(final ActionEvent theEvent) {
+            final JCheckBoxMenuItem box = (JCheckBoxMenuItem) theEvent.getSource();
+            myDoodlePanel.setFillButton(box.isSelected());
+        }
+    }
+    
+
+    public class OutlineColorListener implements ActionListener {
+
+        public void actionPerformed(final ActionEvent theEvent) {
+            final Color chosenColor = JColorChooser.showDialog(myDoodlePanel,
+                    "Choose an outline color", myDoodlePanel.getCurrentColor());
+            if (chosenColor != null) {
+                myDoodlePanel.setCurrentColor(chosenColor);
+            }
+        }
+    }
+    
+    public class InnerColorListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(final ActionEvent theEvent) {
+            final Color chosenColor = JColorChooser.showDialog(myDoodlePanel,
+                    "Choose a inner color", myDoodlePanel.getCurrentInnerColor());
+            if (chosenColor != null) {
+                myDoodlePanel.setCurrentInnerColor(chosenColor);
+            }
+        }
+        
+    }
+    
+    /**
+     * A listener that will change the cursor symbol to crosser 
+     * once the cursor enters the panel.
+     * @author Derek Jagger Ruiz Garcia
+     * @version 11/29/2022
+     */
+    public class MouseEntranceListener extends MouseInputAdapter {
+        
+        @Override
+        public void mouseEntered(final MouseEvent theEvent) {
+            myDoodlePanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        }
+        
+        @Override
+        public void mouseExited(final MouseEvent theEvent) {
+            myDoodlePanel.setCursor(null);
+        }
+    }
+}

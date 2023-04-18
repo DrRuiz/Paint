@@ -1,0 +1,38 @@
+/**
+ * 
+ */
+package view;
+
+import java.awt.Color;
+import java.awt.Shape;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/22/2022
+ */
+public class PaintShape {
+    
+    private final Shape myShape;
+    
+    private final int myThickness;
+    
+    private final Color myColor;
+    
+    public PaintShape(final Shape theShape, final int theThickness, final Color theColor) {
+        myShape = theShape;
+        myThickness = theThickness;
+        myColor = theColor;
+    }
+    
+    Shape getShape() {
+        return myShape;
+    }
+    
+    int getThickness() {
+        return myThickness;
+    }
+
+    Color getColor() {
+        return myColor;
+    }
+}

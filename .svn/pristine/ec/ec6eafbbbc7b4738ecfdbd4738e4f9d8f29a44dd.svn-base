@@ -1,0 +1,74 @@
+/**
+ * 
+ */
+package tools;
+
+import java.awt.Color;
+import java.awt.Point;
+import view.DoodlePanel;
+
+/**
+ * @author Derek Jagger Ruiz Garcia
+ * @version 11/23/2022
+ */
+public abstract class AbstractBasicTool implements BasicTool {
+    
+    private static final Point NEGATIVE_POINT = new Point(-15, -15);
+    
+    private Color myColor;
+    
+    private int myThickness;
+    
+    private Point myStartPoint;
+    
+    private Point myEndPoint;
+
+    protected AbstractBasicTool() {
+        myColor = DoodlePanel.UW_PURPLE;
+        myThickness = 3;
+        myStartPoint = NEGATIVE_POINT;
+        myEndPoint = NEGATIVE_POINT;
+    }
+    
+    @Override
+    public void setColor(final Color theColor) {
+        myColor = theColor;
+    }
+    
+    @Override
+    public Color getColor() {
+        return myColor;
+    }
+    
+    @Override
+    public void setThickness(final int theThickness) {
+        myThickness = theThickness;
+    }
+    
+    @Override
+    public int getThickness() {
+        return myThickness;
+    }
+    
+    @Override
+    public void setStartPoint(final Point theStartPoint) {
+        myStartPoint = (Point) theStartPoint.clone();
+    }
+    
+    @Override
+    public Point getStartPoint() {
+        return (Point) myStartPoint.clone();
+    }
+    
+    @Override
+    public void setEndPoint(final Point theEndPoint) {
+        myEndPoint = (Point) theEndPoint.clone();
+
+    }
+    
+    @Override
+    public Point getEndPoint() {
+        return (Point) myEndPoint.clone();
+
+    }
+}
